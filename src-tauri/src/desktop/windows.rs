@@ -1,6 +1,6 @@
 #![allow(unsafe_code)]
 use super::*;
-use windows::{
+use ::windows::{
     Win32::UI::{
         Input::KeyboardAndMouse::{
             HOT_KEY_MODIFIERS, MOD_ALT, MOD_CONTROL, MOD_NOREPEAT, MOD_SHIFT, MOD_WIN,
@@ -69,7 +69,7 @@ pub(super) fn open_url(url: &str) -> Result<(), String> {
     }
 }
 pub(super) fn notify(title: &str, body: &str) -> Result<(), String> {
-    use windows::{
+    use ::windows::{
         Data::Xml::Dom::XmlDocument,
         UI::Notifications::{ToastNotification, ToastNotificationManager},
         Win32::System::WinRT::{RO_INIT_MULTITHREADED, RoInitialize, RoUninitialize},
@@ -83,7 +83,7 @@ pub(super) fn notify(title: &str, body: &str) -> Result<(), String> {
             .replace('\'', "&apos;")
     }
     let initialized = unsafe { RoInitialize(RO_INIT_MULTITHREADED) }.is_ok();
-    let result = (|| -> windows::core::Result<()> {
+    let result = (|| -> ::windows::core::Result<()> {
         let doc = XmlDocument::new()?;
         doc.LoadXml(&HSTRING::from(format!("<toast><visual><binding template=\"ToastGeneric\"><text>{}</text><text>{}</text></binding></visual></toast>",escape(title),escape(body))))?;
         let toast = ToastNotification::CreateToastNotification(&doc)?;
