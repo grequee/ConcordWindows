@@ -1,0 +1,65 @@
+[package]
+name = "concord-app"
+description = "Concord desktop client (Tauri + native Rust signaling client)"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[lib]
+name = "concord_app_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.7.4", features = [] }
+
+[dependencies]
+anyhow.workspace = true
+reqwest.workspace = true
+base64.workspace = true
+png = "0.18.1"
+uuid.workspace = true
+concord-media.workspace = true
+concord-protocol.workspace = true
+concord-rtc.workspace = true
+futures-util.workspace = true
+parking_lot.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tauri = { version = "2.12.5", features = ["tray-icon"] }
+thiserror.workspace = true
+tokio = { workspace = true, features = ["fs", "io-util"] }
+tokio-tungstenite.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+url.workspace = true
+
+[target.'cfg(target_os = "linux")'.dependencies]
+libloading = "0.7.4"
+x11rb = { workspace = true, features = ["xkb"] }
+concord-media = { workspace = true, features = ["video", "x11", "wayland"] }
+gtk = "0.18.2"
+
+[target.'cfg(target_os = "windows")'.dependencies]
+concord-media = { workspace = true, features = ["video", "windows"] }
+windows = { version = "0.62.2", features = [
+    "Win32_Foundation",
+    "Win32_Graphics_Gdi",
+    "Win32_System_LibraryLoader",
+    "Win32_System_WinRT",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_UI_Shell",
+    "UI_Notifications",
+    "Data_Xml_Dom",
+] }
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["io-util", "test-util"] }
+axum.workspace = true
+concord-signaling-server = { path = "../crates/signaling-server" }
+tauri = { version = "2.12.5", features = ["test"] }
+
+[lints]
+workspace = true

@@ -1,0 +1,5 @@
+{
+  "name": "concord-windows-media",
+  "version-string": "0.1.0",
+  "dependencies": ["libvpx", "libyuv", "opus", "speexdsp"]
+}

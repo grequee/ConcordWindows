@@ -1,0 +1,55 @@
+[package]
+name = "concord-media"
+description = "Native screen/audio capture and codec pipeline"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[features]
+default = ["audio"]
+# Backend selection is explicit so a Linux build never compiles Windows APIs
+# and vice versa. Audio is cross-platform and enabled by default.
+audio = ["dep:cpal", "dep:ringbuf", "dep:opus", "dep:serde"]
+video = []
+x11 = ["video", "dep:x11rb", "dep:libc"]
+wayland = ["video"]
+windows = ["video", "dep:windows"]
+
+[dependencies]
+cpal = { workspace = true, optional = true }
+libc = { workspace = true, optional = true }
+opus = { workspace = true, optional = true }
+ringbuf = { workspace = true, optional = true }
+serde = { workspace = true, optional = true }
+thiserror.workspace = true
+tracing.workspace = true
+x11rb = { workspace = true, optional = true }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+windows = { version = "0.62.2", optional = true, features = [
+    "Foundation",
+    "Graphics_Capture",
+    "Graphics_DirectX_Direct3D11",
+    "Win32_Foundation",
+    "Win32_Graphics_Direct3D",
+    "Win32_Graphics_Direct3D11",
+    "Win32_Graphics_Dxgi_Common",
+    "Win32_Graphics_Gdi",
+    "Win32_System_WinRT_Direct3D11",
+    "Win32_System_WinRT_Graphics_Capture",
+] }
+
+[build-dependencies]
+bindgen = "0.72"
+cc = "1.10"
+pkg-config = "0.3"
+vcpkg = "0.2.15"
+
+[dev-dependencies]
+anyhow.workspace = true
+clap.workspace = true
+
+[lints]
+workspace = true

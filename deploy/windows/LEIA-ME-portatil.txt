@@ -1,0 +1,20 @@
+Concord para Windows x64 - pacote sem instalador
+
+1. Extraia a pasta Concord inteira do ZIP.
+2. Abra Concord.exe.
+3. Se o Windows informar que falta Microsoft Edge WebView2 Runtime,
+   execute MicrosoftEdgeWebview2Setup.exe e depois abra Concord.exe novamente.
+   Esse instalador oficial precisa de internet para baixar o runtime.
+
+Requer Windows 10 1903 ou posterior, ou Windows 11, de 64 bits.
+Os codecs de audio/video e o runtime C estao embutidos no executavel.
+Nao e necessario instalar Rust, Node.js ou ferramentas de desenvolvimento.
+O frontend tambem esta embutido; nao precisa copiar arquivos HTML separados.
+Os ajustes do app ficam no perfil do usuario, como na versao instalada.
+
+Servidor: https://concordserver.onrender.com
+Informe seu nome e o convite privado configurado no servidor.
+Compartilhamento de tela: captura o monitor principal inteiro.
+1080p60 permanece experimental. As conexoes usam STUN, sem TURN.
+
+WebView2 oficial: https://developer.microsoft.com/microsoft-edge/webview2/

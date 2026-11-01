@@ -1,0 +1,5 @@
+{
+  "build": {
+    "beforeBundleCommand": "bash scripts/stage-linux-libs.sh"
+  }
+}

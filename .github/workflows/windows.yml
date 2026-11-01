@@ -1,0 +1,51 @@
+name: Windows desktop
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/windows.yml'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - 'rust-toolchain.toml'
+      - 'crates/**'
+      - 'src-tauri/**'
+      - 'ui/**'
+      - 'package*.json'
+      - '*config*'
+      - 'scripts/build-windows.ps1'
+      - 'scripts/package-windows.ps1'
+      - 'deploy/windows/**'
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-2022
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Build, test and package Windows x64
+        shell: pwsh
+        run: ./scripts/build-windows.ps1
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: Concord-Windows-x64
+          path: target/x86_64-pc-windows-msvc/release/bundle/nsis/*-setup.exe
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload runnable ZIP (also if installer bundling fails)
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: Concord-Windows-x64-ZIP
+          path: target/windows/Concord-Windows-x64.zip
+          if-no-files-found: ignore
+          retention-days: 14

@@ -1,0 +1,17 @@
+/target
+/node_modules
+/ui/dist
+/src-tauri/gen
+/src-tauri/target
+/concord.toml
+/ConcordServer/
+/conversa/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+
+# Local native account credentials are never source artifacts.
+**/account-session.json
+**/chat-identity.json
