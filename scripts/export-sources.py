@@ -36,7 +36,8 @@ if __name__ == "__main__":
     export(ROOT,
            ["Cargo.toml", "Cargo.lock", "package.json", "package-lock.json", "README.md",
             "rust-toolchain.toml", "rustfmt.toml", "vite.config.ts", "svelte.config.js",
-            "tsconfig.json", ".gitignore", ".dockerignore", ".github/workflows/windows.yml"],
+            "tsconfig.json", ".gitignore", ".gitattributes", ".dockerignore",
+            ".github/workflows/windows.yml"],
            ["crates", "src-tauri", "ui", "scripts", "docs", "deploy/windows"],
            "target/windows/Concord-Windows-source.zip", "Concord")
     export(ROOT / "ConcordServer",
