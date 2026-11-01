@@ -3,7 +3,7 @@
   import * as api from './lib/api';
   import { describeError } from './lib/api';
   import DesktopSettings from './lib/DesktopSettings.svelte';
-  import Downloads from './lib/Downloads.svelte';
+  import Downloads from './lib/DownloadsPanel.svelte';
   import { updateDownload, type Download } from './lib/downloads.svelte';
   import { listen } from '@tauri-apps/api/event';
   import { matchesShortcut } from './lib/shortcut';
