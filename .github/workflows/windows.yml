@@ -15,6 +15,7 @@ on:
       - '*config*'
       - 'scripts/build-windows.ps1'
       - 'scripts/package-windows.ps1'
+      - 'scripts/windows-opus-static-runtime.cmake'
       - 'deploy/windows/**'
   pull_request:
 

@@ -51,10 +51,12 @@ npm run build:windows
 
 O script `scripts/build-windows.ps1` carrega o ambiente MSVC x64, prepara o alvo
 Rust e baixa o vcpkg na versão `2026.10.16` para `target/windows-tools/vcpkg`.
-Compila `libvpx`, `libyuv`, `opus` e `speexdsp` com o triplet
-`x64-windows-static`, usando também CRT estático no Rust. O build não depende
-de DLLs avulsas desses codecs. A primeira execução exige internet e pode
-demorar, pois compila as bibliotecas nativas.
+Compila `libvpx`, `libyuv` e `speexdsp` com o triplet `x64-windows-static`.
+O crate Rust `opusic-sys` compila o código-fonte embutido do Opus; o arquivo
+`scripts/windows-opus-static-runtime.cmake` faz esse código usar o mesmo CRT
+estático do Rust. Isso evita misturar CRTs no executável. O build não depende de
+DLLs avulsas desses codecs. A primeira execução exige internet e pode demorar,
+pois compila as bibliotecas nativas.
 
 O script executa check do frontend, formatação Rust, check de todos os alvos,
 testes unitários, Clippy e o build Tauri. O Tauri carrega automaticamente

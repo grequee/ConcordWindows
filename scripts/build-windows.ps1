@@ -52,10 +52,11 @@ try {
 
     Invoke-Checked "rustup" @("show", "active-toolchain")
     Invoke-Checked "rustup" @("target", "add", "x86_64-pc-windows-msvc")
-    # Keep codecs and the MSVC runtime static, avoiding extra codec/CRT DLLs.
+    # Keep Rust and the bundled Opus MSVC runtime static to avoid CRT conflicts.
     $env:VCPKG_ROOT = Join-Path $projectRoot "target\windows-tools\vcpkg"
     $env:VCPKGRS_TRIPLET = "x64-windows-static"
     $env:CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_RUSTFLAGS = "-C target-feature=+crt-static"
+    $env:CMAKE_TOOLCHAIN_FILE_x86_64_pc_windows_msvc = Join-Path $PSScriptRoot "windows-opus-static-runtime.cmake"
     if (!$SkipDependencies) {
         if (!(Test-Path (Join-Path $env:VCPKG_ROOT ".git"))) {
             Invoke-Checked "git" @("clone", "--depth", "1", "--branch", "2026.10.16",
@@ -67,11 +68,6 @@ try {
             "--x-manifest-root=$projectRoot\deploy\windows",
             "--x-install-root=$env:VCPKG_ROOT\installed")
     }
-    $env:OPUS_LIB_DIR = Join-Path $env:VCPKG_ROOT "installed\x64-windows-static\lib"
-    if (!(Test-Path (Join-Path $env:OPUS_LIB_DIR "opus.lib"))) {
-        throw "Bibliotecas ausentes. Execute novamente sem -SkipDependencies."
-    }
-    $env:OPUS_STATIC = "1"
     if ($PrepareOnly) { return }
 
     Invoke-Checked "npm.cmd" @("ci")
