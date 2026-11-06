@@ -3,30 +3,42 @@
 
 #![allow(unsafe_code)] // Native windows, COM initialization and GDI boundary.
 
+#[cfg(test)]
 use std::cell::RefCell;
 use std::sync::Arc;
-use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
+use std::sync::atomic::AtomicBool;
+#[cfg(test)]
+use std::sync::atomic::{AtomicUsize, Ordering};
+#[cfg(test)]
 use std::time::Duration;
 
 use concord_media::{ScreenCapturer, WindowsCapturer};
+#[cfg(test)]
 use parking_lot::Mutex;
+#[cfg(test)]
 use tauri::{AppHandle, Runtime};
+#[cfg(test)]
 use windows::Win32::Foundation::{HINSTANCE, HWND, LPARAM, LRESULT, RECT, WPARAM};
+#[cfg(test)]
 use windows::Win32::Graphics::Gdi::{
     BI_RGB, BITMAPINFO, BITMAPINFOHEADER, BLACK_BRUSH, BeginPaint, COLORONCOLOR, DIB_RGB_COLORS,
     EndPaint, FillRect, GetStockObject, HBRUSH, InvalidateRect, PAINTSTRUCT, SRCCOPY,
     SetStretchBltMode, StretchDIBits,
 };
+#[cfg(test)]
 use windows::Win32::System::LibraryLoader::GetModuleHandleW;
 use windows::Win32::System::WinRT::{RO_INIT_MULTITHREADED, RoInitialize, RoUninitialize};
+#[cfg(test)]
 use windows::Win32::UI::WindowsAndMessaging::{
     CW_USEDEFAULT, CreateWindowExW, DefWindowProcW, DestroyWindow, DispatchMessageW, GetClientRect,
     GetMessageW, IDC_ARROW, LoadCursorW, MSG, PostMessageW, PostQuitMessage, RegisterClassW,
     SW_SHOW, ShowWindow, TranslateMessage, WINDOW_EX_STYLE, WM_APP, WM_CLOSE, WM_DESTROY,
     WM_ERASEBKGND, WM_PAINT, WM_SIZE, WNDCLASSW, WS_OVERLAPPEDWINDOW,
 };
+#[cfg(test)]
 use windows::core::{PCWSTR, w};
 
+#[cfg(test)]
 use super::PreviewFrame;
 
 pub(super) struct CaptureApartment(std::marker::PhantomData<std::rc::Rc<()>>);
@@ -55,9 +67,12 @@ pub(super) fn prepare_capture(running: Arc<AtomicBool>) -> Result<Box<dyn Screen
     )?))
 }
 
+#[cfg(test)]
 const REDRAW: u32 = WM_APP + 1;
+#[cfg(test)]
 const CLASS_NAME: PCWSTR = w!("ConcordNativeScreenViewer");
 
+#[cfg(test)]
 #[derive(Default)]
 struct ViewerState {
     frame: Mutex<Option<PreviewFrame>>,
@@ -69,15 +84,18 @@ struct ViewerState {
     painted: std::sync::atomic::AtomicU64,
 }
 
+#[cfg(test)]
 thread_local! {
     // One viewer per thread; no raw Rust pointer is attached to an HWND.
     static VIEWER: RefCell<Option<Arc<ViewerState>>> = const { RefCell::new(None) };
 }
 
+#[cfg(test)]
 pub struct Viewer {
     state: Arc<ViewerState>,
 }
 
+#[cfg(test)]
 impl Viewer {
     pub fn open<R: Runtime>(
         _app: &AppHandle<R>,
@@ -173,12 +191,14 @@ impl Viewer {
     }
 }
 
+#[cfg(test)]
 impl Drop for Viewer {
     fn drop(&mut self) {
         self.close();
     }
 }
 
+#[cfg(test)]
 unsafe fn create_window(
     title: &str,
     width: u32,
@@ -236,6 +256,7 @@ unsafe fn create_window(
     Ok(hwnd)
 }
 
+#[cfg(test)]
 unsafe extern "system" fn window_proc(
     hwnd: HWND,
     message: u32,
@@ -277,6 +298,7 @@ unsafe extern "system" fn window_proc(
     }
 }
 
+#[cfg(test)]
 unsafe fn paint(hwnd: HWND) {
     let mut paint = PAINTSTRUCT::default();
     let dc = unsafe { BeginPaint(hwnd, &mut paint) };

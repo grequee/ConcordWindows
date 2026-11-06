@@ -134,7 +134,7 @@ pub struct AudioActivityEvent {
 #[derive(Debug)]
 pub(crate) enum CallCommand {
     InstallAudio {
-        change: concord_media::PreparedAudioChange,
+        change: Box<concord_media::PreparedAudioChange>,
         ack: oneshot::Sender<()>,
     },
     SetPeerVolume {
@@ -449,7 +449,7 @@ impl<R: Runtime> CallActor<R> {
     async fn handle_command(&mut self, command: CallCommand) -> bool {
         match command {
             CallCommand::InstallAudio { change, ack } => {
-                self.audio.apply_change(change);
+                self.audio.apply_change(*change);
                 self.microphone_stats = MicrophoneStats::default();
                 self.activity.reset();
                 self.publish();
@@ -1529,7 +1529,7 @@ fn emit_screen_preview<R: Runtime>(
     };
 
     let mut rgba = Vec::with_capacity(bgra.len());
-    for pixel in bgra.chunks_exact(4) {
+    for pixel in bgra.as_chunks::<4>().0 {
         rgba.extend_from_slice(&[pixel[2], pixel[1], pixel[0], pixel[3]]);
     }
     let mut png_bytes = Vec::new();

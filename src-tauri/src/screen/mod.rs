@@ -45,15 +45,11 @@ pub type FrameSender = UnboundedSender<ScreenEvent>;
 mod linux;
 #[cfg(target_os = "linux")]
 use linux as platform;
-#[cfg(target_os = "linux")]
-pub use linux::Viewer;
 
 #[cfg(target_os = "windows")]
 mod windows;
 #[cfg(target_os = "windows")]
 use windows as platform;
-#[cfg(target_os = "windows")]
-pub use windows::Viewer;
 
 #[cfg(any(target_os = "linux", target_os = "windows"))]
 mod native;

@@ -108,7 +108,10 @@ impl DesktopState {
         if let (Some(commands), Some(change)) = (commands, prepared) {
             let (ack, receiver) = oneshot::channel();
             if commands
-                .send(CallCommand::InstallAudio { change, ack })
+                .send(CallCommand::InstallAudio {
+                    change: Box::new(change),
+                    ack,
+                })
                 .is_ok()
             {
                 // If the call ends concurrently, the saved choice still applies
