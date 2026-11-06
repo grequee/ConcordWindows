@@ -58,6 +58,13 @@ estático do Rust. Isso evita misturar CRTs no executável. O build não depende
 DLLs avulsas desses codecs. A primeira execução exige internet e pode demorar,
 pois compila as bibliotecas nativas.
 
+O `tauri-build` embute o manifesto do Windows apenas no executável principal. Os
+binários de teste também importam `TaskDialogIndirect`; por isso o
+`src-tauri/build.rs` embute `src-tauri/windows-app-manifest.xml`
+(Common-Controls v6) em todos os alvos. Sem esse manifesto, `cargo test` falha
+no Windows com `STATUS_ENTRYPOINT_NOT_FOUND` (0xc0000139) antes de executar
+qualquer teste.
+
 O script executa check do frontend, formatação Rust, check de todos os alvos,
 testes unitários, Clippy e o build Tauri. O Tauri carrega automaticamente
 `src-tauri/tauri.windows.conf.json`, que seleciona NSIS e instalação por usuário
